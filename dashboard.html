@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DashBoard</title>
+</head>
+<body>
+    <h1>DashBoard</h1>
+    <br><button id = "logout">Log Out</button>
+    <form id = "add-book">
+        <br>
+        <input type = "text" placeholder = "Image: insert url" class = "book-form" required>
+        <input type = "text" placeholder = "Title" class = "book-form" required>
+        <input type = "text" placeholder = "Description" class = "book-form" required>
+        <input type = "text" placeholder = "Author" class = "book-form" required>
+        <input type = "text" placeholder = "ISBN" class = "book-form" required>
+        <input type = "text" placeholder = "Rating" class = "book-form" required>
+        <input type = "text" placeholder = "Seller" class = "book-form" required>
+        <button>Add Book</button>
+    </form>
+
+    <h2>Books added by you:</h2>
+    <div id = "my-book-div"></div>
+
+   <script src = "functions.js"></script>
+   <script src = "dashboard.js"></script>
+</body>
+</html>
