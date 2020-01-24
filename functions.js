@@ -3,12 +3,50 @@ let render = function(){
     document.querySelector('#log-error-message').textContent = '';
 };
 
+let renderMyBooks = function(){
+    let myBooks_rnd = localStorage.getItem("mybooks") ? JSON.parse(localStorage.getItem("mybooks")) : [];
+    let myBooksJSON = JSON.stringify(myBooks_rnd);
+    localStorage.setItem('mybooks', myBooksJSON);
+
+    let booklistHTML = '';
+    for(book of myBooks){
+        console.log(book.title);
+        let b = `
+                <ul>
+                    <img src = ${book.image} height="100px" width="80px">
+                    <li>Title: ${book.title}</li>
+                    <li>Description: ${book.description}</li>
+                    <li>Author: ${book.author}</li>
+                    <li>ISBN: ${book.isbn}</li>
+                    <li>Rating: ${book.rating}</li>
+                    <li>Seller: ${book.seller}</li>
+                </ul>
+
+                <button class = "edit-book" id = "${book.title}">Edit</button>
+
+                <form id = "form-${book.title}" style="display: none;">
+                    <input type = "text" placeholder = "Image: insert url" class = "book-form-${book.title}" >
+                    <input type = "text" placeholder = "Title" class = "book-form-${book.title}" >
+                    <input type = "text" placeholder = "Description" class = "book-form-${book.title}" >
+                    <input type = "text" placeholder = "Author" class = "book-form-${book.title}" >
+                    <input type = "text" placeholder = "ISBN" class = "book-form-${book.title}" >
+                    <input type = "text" placeholder = "Rating" class = "book-form-${book.title}" >
+                    <input type = "text" placeholder = "Seller" class = "book-form-${book.title}" >
+                    <input type="submit" onclick = "editBook()">
+                </form>
+                
+        `
+        booklistHTML += b;
+    }
+    document.querySelector('#my-book-div').innerHTML = booklistHTML;
+}
+
 let renderBook = function(){
     let booklistHTML = '';
     for(book of books){
         let b = `
                 <ul>
-                    <img src = ${book.image} height="100px" width="100px">
+                    <img src = ${book.image} height="100px" width="80px">
                     <li>Title: ${book.title}</li>
                     <li>Description: ${book.description}</li>
                     <li>Author: ${book.author}</li>
@@ -42,6 +80,34 @@ let addBook = function(addedby){
     books.push(bookObject);
     let bookJson = JSON.stringify(books);
     localStorage.setItem('books', bookJson);
+}
+
+let editBook = function() {
+    console.log('here');
+    event.preventDefault();
+    
+    let elements = event.target.form.elements;
+    let temp = [];
+    ind = 0;
+    for(i of elements) temp[ind++] = i.value;
+    console.log(temp);
+
+    myBooks.forEach(function(book){
+        
+        if(book.title === editableBook){
+            console.log('here');
+            book.image = temp[0];
+            book.title = temp[1];
+            book.description = temp[2];
+            book.author = temp[3];
+            book.isbn = temp[4];
+            book.rating = temp[5];
+            book.seller = temp[6];
+        }
+    })
+    let bookJson = JSON.stringify(myBooks);
+    localStorage.setItem('books', bookJson);
+    renderMyBooks();
 }
 
 let someError = function(error){
@@ -114,25 +180,9 @@ let login = function(){
     else loginError("Password or Username didn't match.")
 }
 
-let renderMyBooks = function(){
-    let myBooks = books.filter((book) => book.addedby === currentUser[0].userName);
 
-    let booklistHTML = '';
-    for(book of myBooks){
-        let b = `
-                <ul>
-                    <img src = ${book.image} height="100px" width="100px">
-                    <li>Title: ${book.title}</li>
-                    <li>Description: ${book.description}</li>
-                    <li>Author: ${book.author}</li>
-                    <li>ISBN: ${book.isbn}</li>
-                    <li>Rating: ${book.rating}</li>
-                    <li>Seller: ${book.seller}</li>
-                </ul>
-        `
-        booklistHTML += b;
-    }
-    document.querySelector('#my-book-div').innerHTML = booklistHTML;
-}
+
+
+
 
 
