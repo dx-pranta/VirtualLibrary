@@ -3,14 +3,37 @@ let render = function(){
     document.querySelector('#log-error-message').textContent = '';
 };
 
+let updateMyBook = function(){
+    let currentUser = user.filter((item) => item.userName === sessionStorage.getItem('loggedin'));
+    myBooks = books.filter((book) => book.addedby === currentUser[0].userName);
+}
+
+let deleteBook = function(){
+    console.log('Delete');
+    console.log(event.target.id);
+    books = books.filter((book) => `delete-${book.title}` !== event.target.id)
+    localStorage.setItem('books', JSON.stringify(books));
+    updateMyBook();      
+    renderMyBooks();    
+}
+
+let editBook1 = function(){
+    let ind = 0;
+    let book = myBooks.filter((book) => book.title === event.toElement.id)[0];
+    console.log(event.toElement.id);
+    editableBook = event.toElement.id;
+    let temp = [book.image, book.title, book.description, book.author, book.isbn, book.rating, book.seller];
+    let form = document.getElementById(`form-${event.toElement.id}`);
+    form.style.display = "block";
+    
+    for(i of form) if(ind < 7) i.value = temp[ind++];
+    
+}
+
 let renderMyBooks = function(){
-    let myBooks_rnd = localStorage.getItem("mybooks") ? JSON.parse(localStorage.getItem("mybooks")) : [];
-    let myBooksJSON = JSON.stringify(myBooks_rnd);
-    localStorage.setItem('mybooks', myBooksJSON);
 
     let booklistHTML = '';
     for(book of myBooks){
-        console.log(book.title);
         let b = `
                 <ul>
                     <img src = ${book.image} height="100px" width="80px">
@@ -22,8 +45,9 @@ let renderMyBooks = function(){
                     <li>Seller: ${book.seller}</li>
                 </ul>
 
-                <button class = "edit-book" id = "${book.title}">Edit</button>
-
+                <button class = "edit-book" id = "${book.title}" onclick = "editBook1()">Edit</button>
+                <button class = "delete-book" id = "delete-${book.title}" onclick = "deleteBook()">Delete</button>
+                
                 <form id = "form-${book.title}" style="display: none;">
                     <input type = "text" placeholder = "Image: insert url" class = "book-form-${book.title}" >
                     <input type = "text" placeholder = "Title" class = "book-form-${book.title}" >
@@ -32,7 +56,7 @@ let renderMyBooks = function(){
                     <input type = "text" placeholder = "ISBN" class = "book-form-${book.title}" >
                     <input type = "text" placeholder = "Rating" class = "book-form-${book.title}" >
                     <input type = "text" placeholder = "Seller" class = "book-form-${book.title}" >
-                    <input type="submit" onclick = "editBook()">
+                    <input type = "submit" onclick = "editBook()" >
                 </form>
                 
         `
@@ -80,10 +104,10 @@ let addBook = function(addedby){
     books.push(bookObject);
     let bookJson = JSON.stringify(books);
     localStorage.setItem('books', bookJson);
+    updateMyBook();
 }
 
 let editBook = function() {
-    console.log('here');
     event.preventDefault();
     
     let elements = event.target.form.elements;
@@ -92,8 +116,7 @@ let editBook = function() {
     for(i of elements) temp[ind++] = i.value;
     console.log(temp);
 
-    myBooks.forEach(function(book){
-        
+    books.forEach(function(book){
         if(book.title === editableBook){
             console.log('here');
             book.image = temp[0];
@@ -105,10 +128,14 @@ let editBook = function() {
             book.seller = temp[6];
         }
     })
-    let bookJson = JSON.stringify(myBooks);
+
+    let bookJson = JSON.stringify(books);
     localStorage.setItem('books', bookJson);
+    
     renderMyBooks();
 }
+
+
 
 let someError = function(error){
     render();
@@ -152,7 +179,7 @@ let register = function(){
 
     if(userObject.isValidPass() && userObject.isValidUserName) user.push(userObject);
     else if(userObject.isValidUserName) someError("Password didn't match");
-    else someError("Username already exist.")
+    else someError("Username already exists.")
 
     let userJson = JSON.stringify(user);
     localStorage.setItem("user", userJson);

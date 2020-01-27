@@ -1,0 +1,27 @@
+body{
+    background-color: ghostwhite;
+}
+#user-pass{
+    width: 30%;
+    position: absolute;
+    
+}
+#ind-div1{
+    display: flex;  
+    margin: 20px;
+    background-color:; 
+    position: relative; 
+    padding: 20px 20px;
+}
+
+#home{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+    color: darkblue;
+    font-weight: bolder;
+}
+
+#ind-div3{
+    position: absolute; 
+    right: 20px;
+}
