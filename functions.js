@@ -25,10 +25,10 @@ let editBook1 = function(){
     let temp = [book.image, book.title, book.description, book.author, book.isbn, book.rating, book.seller];
     let form = document.getElementById(`form-${event.toElement.id}`);
     form.style.display = "block";
-    
     for(i of form) if(ind < 7) i.value = temp[ind++];
-    
 }
+
+
 
 let renderMyBooks = function(){
 
@@ -65,19 +65,36 @@ let renderMyBooks = function(){
     document.querySelector('#my-book-div').innerHTML = booklistHTML;
 }
 
+// let renderBook = function(){
+//     let booklistHTML = '';
+//     for(book of books){
+//         let b = `
+//                 <ul>
+//                     <img src = ${book.image} height="100px" width="80px">
+//                     <li>Title: ${book.title}</li>
+//                     <li>Description: ${book.description}</li>
+//                     <li>Author: ${book.author}</li>
+//                     <li>ISBN: ${book.isbn}</li>
+//                     <li>Rating: ${book.rating}</li>
+//                     <li>Seller: ${book.seller}</li>
+//                 </ul>
+//         `
+//         booklistHTML += b;
+//     }
+//     document.querySelector('#book-div').innerHTML = booklistHTML;
+// }
+
 let renderBook = function(){
     let booklistHTML = '';
     for(book of books){
         let b = `
-                <ul>
-                    <img src = ${book.image} height="100px" width="80px">
-                    <li>Title: ${book.title}</li>
-                    <li>Description: ${book.description}</li>
-                    <li>Author: ${book.author}</li>
-                    <li>ISBN: ${book.isbn}</li>
-                    <li>Rating: ${book.rating}</li>
-                    <li>Seller: ${book.seller}</li>
-                </ul>
+            <div class="card" style="width: 18rem; margin-right: 20px;">
+                <img class="card-img-top" src="${book.image}" alt="Card image cap" height="300px" width="100px">
+                <div class="card-body">
+                    <h5 class="card-title">${book.title}</h5>
+                    <p class="card-text">${book.author}</p>
+                </div>
+            </div>
         `
         booklistHTML += b;
     }
@@ -152,6 +169,7 @@ let loginError = function(error){
 let register = function(){
     let temp = [];
     let form = document.querySelectorAll('.reg-form');
+    console.log(form);
 
     form.forEach(function(input){
         temp.push(input.value);
@@ -177,23 +195,31 @@ let register = function(){
         }
     }
 
-    if(userObject.isValidPass() && userObject.isValidUserName) user.push(userObject);
+    if(userObject.isValidPass() && userObject.isValidUserName){
+        user.push(userObject);
+        form.forEach(function(input){
+            temp.push(input.value);
+            input.value = "";
+        })
+    } 
     else if(userObject.isValidUserName) someError("Password didn't match");
     else someError("Username already exists.")
 
     let userJson = JSON.stringify(user);
     localStorage.setItem("user", userJson);
+    render()
 }
 
 
 let login = function(){
-    let form = document.querySelectorAll('.login-form');
+    let form = document.querySelectorAll('.login-formc');
     let temp = [];
     form.forEach(function(input){
         temp.push(input.value);
     })
     let userName = temp[0];
     let password = temp[1];
+    
     let flag = false;
 
     user.forEach((user) => {
